@@ -15474,7 +15474,9 @@ static Class tabBarButtonClass = nil;
                 continue;
             }
             // 隐藏底栏背景
-            if ([subview isKindOfClass:barBackgroundClass] || ([subview isMemberOfClass:[UIView class]] && originalTabBarHeight > 0 && fabs(subview.frame.size.height - gCurrentTabBarHeight) < 0.1)) {
+            if ([subview isKindOfClass:barBackgroundClass]
+                || [subview isKindOfClass:NSClassFromString(@"AWETabBarSkinView")]
+                || ([subview isMemberOfClass:[UIView class]] && originalTabBarHeight > 0 && fabs(subview.frame.size.height - gCurrentTabBarHeight) < 0.1)) {
                 subview.hidden = shouldHideBackgrounds;
             }
             // 隐藏细分割线
@@ -15547,7 +15549,9 @@ static Class tabBarButtonClass = nil;
                 continue;
             }
             // 隐藏底栏背景
-            if ([subview isKindOfClass:barBackgroundClass] || ([subview isMemberOfClass:[UIView class]] && originalTabBarHeight > 0 && fabs(subviewHeight - gCurrentTabBarHeight) < 0.1)) {
+            if ([subview isKindOfClass:barBackgroundClass]
+                || [subview isKindOfClass:NSClassFromString(@"AWETabBarSkinView")]
+                || ([subview isMemberOfClass:[UIView class]] && originalTabBarHeight > 0 && fabs(subviewHeight - gCurrentTabBarHeight) < 0.1)) {
                 subview.hidden = shouldHideBackgrounds;
             }
             // 隐藏细分割线
