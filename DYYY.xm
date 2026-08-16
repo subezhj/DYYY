@@ -2159,6 +2159,9 @@ void DYYYApplyFeedNowPlayingSettingChange(BOOL disableNowPlayingInfo) {
 }
 
 static BOOL DYYYShouldBlockFeedNowPlayingSystemInfoWrite(void) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DYKillerMediaIslandEnabled"]) {
+        return NO;
+    }
     return DYYYGetBool(DYYY_DISABLE_FEED_NOW_PLAYING_INFO_KEY) && !dyyyClearingFeedNowPlayingSystemInfo;
 }
 
