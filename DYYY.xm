@@ -7206,20 +7206,21 @@ static void DYYYStartHideFeedAnchorHookInstaller(void) {
       containerView.layer.cornerRadius = userRadius;
       containerView.layer.masksToBounds = YES;
 
-      for (UIView *subview in containerView.subviews) {
-          if ([subview isKindOfClass:[UIVisualEffectView class]] && subview.tag == 999) {
-              [subview removeFromSuperview];
-          }
-      }
-
       BOOL isDarkMode = [DYYYUtils isDarkMode];
       UIBlurEffectStyle blurStyle = isDarkMode ? UIBlurEffectStyleDark : UIBlurEffectStyleLight;
       UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:blurStyle];
-      UIVisualEffectView *blurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+
+      UIVisualEffectView *blurView = (UIVisualEffectView *)[containerView viewWithTag:999];
+      if (!blurView) {
+          blurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+          blurView.tag = 999;
+          blurView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+          [containerView insertSubview:blurView atIndex:0];
+      } else {
+          blurView.effect = blurEffect;
+      }
 
       blurView.frame = containerView.bounds;
-      blurView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-      blurView.tag = 999;
       blurView.layer.cornerRadius = userRadius;
       blurView.layer.masksToBounds = YES;
 
@@ -7229,8 +7230,6 @@ static void DYYYStartHideFeedAnchorHookInstaller(void) {
       }
 
       blurView.alpha = userTransparency;
-
-      [containerView insertSubview:blurView atIndex:0];
 
       [self clearBackgroundRecursivelyInView:containerView];
 
@@ -7256,7 +7255,7 @@ static void DYYYStartHideFeedAnchorHookInstaller(void) {
 %new
 - (void)clearBackgroundRecursivelyInView:(UIView *)view {
     for (UIView *subview in view.subviews) {
-        if ([subview isKindOfClass:[UIVisualEffectView class]] && subview.tag == 999 && [subview isKindOfClass:[UIButton class]]) {
+        if (subview.tag == 999 || [subview isKindOfClass:[UIVisualEffectView class]] || [subview isKindOfClass:[UIButton class]]) {
             continue;
         }
         subview.backgroundColor = [UIColor clearColor];
@@ -15995,10 +15994,13 @@ static Class tabBarButtonClass = nil;
                         innerSubview.subviews[0].hidden = YES;
                     }
 
-                    UIView *whiteBackgroundView = [[UIView alloc] initWithFrame:innerSubview.bounds];
-                    whiteBackgroundView.backgroundColor = [UIColor whiteColor];
-                    whiteBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-                    [innerSubview addSubview:whiteBackgroundView];
+                    if (![innerSubview viewWithTag:888]) {
+                        UIView *whiteBackgroundView = [[UIView alloc] initWithFrame:innerSubview.bounds];
+                        whiteBackgroundView.tag = 888;
+                        whiteBackgroundView.backgroundColor = [UIColor whiteColor];
+                        whiteBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+                        [innerSubview addSubview:whiteBackgroundView];
+                    }
                     break;
                 }
             }
